@@ -1,0 +1,84 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# Environment
+env/
+venv/
+ENV/
+.venv/
+.conda/
+*.env
+*.env.*
+
+# VSCode / PyCharm / other IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Data
+data/
+datasets/
+*.csv
+*.tsv
+*.json
+*.zip
+*.tar.gz
+*.h5
+*.npz
+*.npy
+*.db
+*.sqlite
+
+# Models / Weights
+checkpoints/
+runs/
+*.pth
+*.pt
+*.onnx
+*.ckpt
+*.tflite
+*.pb
+
+# Outputs
+output/
+logs/
+results/
+*.png
+*.jpg
+*.jpeg
+
+# Cache
+.cache/
+__pycache__/
+*.pkl
+*.joblib
+
+# Colab
+*.ipynb_save
+
+# TensorBoard
+events.out.tfevents.*
+
+# Ultralytics / YOLO
+runs/
+*.yaml  # if you generate config files dynamically
+
+# Others
+*.bak
+*.swp
+*.tmp
