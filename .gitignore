@@ -1,3 +1,9 @@
+# Video folders
+output_videos/
+input_videos/
+
+
+
 # Python
 __pycache__/
 *.py[cod]
