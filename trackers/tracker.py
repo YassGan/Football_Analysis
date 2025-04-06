@@ -73,6 +73,8 @@ class Tracker:
                 elif class_name == 'ball':
                     tracks["ball"][frame_num][track_id] = {"bbox": bbox}
 
+
+
         if stub_path is not None:
             # Save the stub
             with open(stub_path, 'wb') as f:
@@ -80,7 +82,7 @@ class Tracker:
 
         return tracks
 
-    def draw_ellipse(self, frame, bbox, color, track_id):
+    def draw_ellipse(self, frame, bbox, color, track_id=None):
         y2 = int(bbox[3])
         x_center, _ = get_center_of_bbox(bbox)
         x_center = int(x_center)  # Make sure it's an int
@@ -100,6 +102,32 @@ class Tracker:
             lineType=cv2.LINE_4,
         )
 
+        rectangle_width=40
+        rectangle_height=20
+
+        x1_rect=x_center-rectangle_width//2
+        x2_rect=x_center+rectangle_width//2
+
+        y1_rect=y2-rectangle_height//2
+        y2_rect=y2+rectangle_height//2
+
+        if track_id is not None:
+            cv2.rectangle(frame, (x1_rect, y1_rect), (x2_rect, y2_rect), color, cv2.FILLED)
+
+            x1_text = x1_rect+12
+            if track_id >99:
+                x1_text -=10
+
+            cv2.putText(
+                frame,
+                str(track_id),
+                (x1_text, y2+5),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                (255, 255, 255),
+                2,
+            )
+
         return frame
 
 
@@ -117,8 +145,8 @@ class Tracker:
                 frame = self.draw_ellipse(frame, player["bbox"], color=(0, 255, 0), track_id=track_id)
 
             # Draw referees
-            for track_id, referee in referee_dict.items():
-                frame = self.draw_ellipse(frame, referee["bbox"], color=(255, 0, 0), track_id=track_id)
+            for _,  referee in referee_dict.items():
+                frame = self.draw_ellipse(frame, referee["bbox"], color=(255, 0, 0))
 
             output_video_frames.append(frame)
 
