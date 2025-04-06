@@ -2,6 +2,7 @@
 import os
 from utils import read_video, save_video
 from trackers.tracker import Tracker  
+import cv2
 
 def main():
     # Get the current working directory
@@ -22,16 +23,25 @@ def main():
                                        stub_path='stubs/track_stubs.pkl')
     
 
-    #draw  output
-    #draw object tracks
-    output_video_frames=tracker.draw_annotations(frames, tracks)
 
 
-        # Output video path
-    output_video_path = os.path.join(base_dir, 'output_videos', 'output_vid.avi')
-    save_video(output_video_frames, output_video_path)
-    print(f"Video saved at: {output_video_path}")
-    print("Tracks:", tracks)
+    output_video_frames = tracker.draw_annotations(frames, tracks)
+    frame = output_video_frames[0]
+
+    for track_id, track in tracks["players"][0].items():
+        bbox = track["bbox"]
+        x1, y1, x2, y2 = map(int, bbox)
+
+        cropped_image = frame[y1:y2, x1:x2]
+        save_path = os.path.join(base_dir, 'output_videos', f'player_{track_id}.png')
+        cv2.imwrite(save_path, cropped_image)
+        print(f"Saved cropped image at: {save_path}")
+
+        output_video_path = os.path.join(base_dir, 'output_videos', 'output_vid.avi')
+        save_video(output_video_frames, output_video_path)
+        print(f"Video saved at: {output_video_path}")
+        print("Tracks:", tracks)
+        break
 
 
 if __name__ == "__main__":
