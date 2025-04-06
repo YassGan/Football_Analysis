@@ -16,7 +16,7 @@ def main():
 
 
     # Instantiate the Tracker
-    tracker = Tracker("models/best.pt")
+    tracker = Tracker("models/best3.pt")
 
     # Call the method
     tracks = tracker.get_object_tracks(frames,
