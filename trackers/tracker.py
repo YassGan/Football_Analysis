@@ -18,19 +18,35 @@ class Tracker:
         self.trackers = sv.ByteTrack()
 
 
-
     def interpolate_ball_positions(self, ball_positions):
-        ball_positions = [x.get(1,{}).get('bbox',[])  for x  in ball_positions]
-        df_ball_positions = pd.DataFrame(ball_positions, columns=['x1', 'y1', 'x2', 'y2'])
+        # Extract the bbox from each ball detection
+        extracted_positions = [x.get(1, {}).get('bbox', []) for x in ball_positions]
 
-        #interpolate missing values
-        df_ball_positions['x1'] = df_ball_positions['x1'].interpolate()
-        #The cas where the missing frame is the first one so we will try to replicate the nearset detection that we can find
-        df_ball_positions=df_ball_positions.bfill()
+        # Filter out empty bboxes (which have no values or not exactly 4 elements)
+        extracted_positions = [bbox for bbox in extracted_positions if len(bbox) == 4]
 
-        ball_positions=[{1:{"bbox":x}}  for x in df_ball_positions.to_numpy().tolist()]
-        
-        return ball_positions
+        if not extracted_positions:
+            print("[WARNING] No valid ball positions to interpolate.")
+            return [{} for _ in ball_positions]  # Maintain same length, return empty dicts
+
+        # Create DataFrame from valid bboxes
+        df_ball_positions = pd.DataFrame(extracted_positions, columns=['x1', 'y1', 'x2', 'y2'])
+
+        # Interpolate and fill
+        df_ball_positions = df_ball_positions.interpolate()
+        df_ball_positions = df_ball_positions.bfill().ffill()
+
+        # Replace original empty bboxes with interpolated ones
+        interpolated = []
+        idx = 0
+        for x in ball_positions:
+            if x.get(1, {}).get('bbox', []) and len(x[1]['bbox']) == 4:
+                interpolated.append({1: {"bbox": df_ball_positions.iloc[idx].tolist()}})
+                idx += 1
+            else:
+                interpolated.append({1: {"bbox": df_ball_positions.iloc[min(idx, len(df_ball_positions)-1)].tolist()}})
+
+        return interpolated
 
 
     def detect_frames(self, frames):
@@ -192,9 +208,11 @@ class Tracker:
             for _,  referee in referee_dict.items():
                 frame = self.draw_ellipse(frame, referee["bbox"], color=(255, 0, 0))
 
+
             # Draw ball
             for track_id, ball in ball_dict.items():
                 frame =self.draw_triangle(frame, ball["bbox"], color=(0, 0, 255))
+                print("Ball drawing")
 
             output_video_frames.append(frame)
 

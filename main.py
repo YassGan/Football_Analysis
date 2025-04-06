@@ -10,18 +10,22 @@ def main():
     base_dir = os.path.dirname(os.path.abspath(__file__))
     
     # Use relative paths based on the current working directory
-    video_path = os.path.join(base_dir, 'input_videos', 'input_vid.mp4')
+    video_path = os.path.join(base_dir, 'input_videos', 'mb2.mp4')
     frames = read_video(video_path)
     print(f"Number of frames read: {len(frames)}")
 
 
     # Instantiate the Tracker
-    tracker = Tracker("models/best3.pt")
+    tracker = Tracker("models/best_.pt")
 
     # Call the method
     tracks = tracker.get_object_tracks(frames,
                                        read_from_stub=True,
                                        stub_path='stubs/track_stubs.pkl')
+
+    # interpolate ball positions
+    # tracks['ball'] = tracker.interpolate_ball_positions(tracks['ball'])
+
     
 
     ## Assing player teams
