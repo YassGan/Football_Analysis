@@ -212,7 +212,6 @@ class Tracker:
             # Draw ball
             for track_id, ball in ball_dict.items():
                 frame =self.draw_triangle(frame, ball["bbox"], color=(0, 0, 255))
-                print("Ball drawing")
 
             output_video_frames.append(frame)
 

@@ -4,6 +4,7 @@ from utils import read_video, save_video
 from trackers.tracker import Tracker  
 import cv2
 from team_assigner import TeamAssigner
+from view_perspective_transformer import ViewTransformer
 
 def main():
     # Get the current working directory 
@@ -19,7 +20,7 @@ def main():
     tracker = Tracker("models/best_.pt")
 
     # Call the method
-    tracks = tracker.get_object_tracks(frames,
+    tracks = tracker.get_object_tracks(frames, 
                                        read_from_stub=True,
                                        stub_path='stubs/track_stubs.pkl')
 
@@ -31,6 +32,12 @@ def main():
     ## Assing player teams
     team_assigner = TeamAssigner()
     team_assigner.assign_teams(frames[0], tracks['players'][0])
+
+
+
+    #View transformer
+    view_transformer = ViewTransformer()
+    view_transformer.add_transformed_position_to_tracks(tracks)
 
     ##loop through the frames for each player and assign the team
     for frame_num, player_track in enumerate(tracks['players']):
