@@ -29,7 +29,7 @@ class TeamAssigner:
         non_player_cluster=max(set(corner_clusters),key=corner_clusters.count)
         player_cluster=1-non_player_cluster
         player_color=kmeans.cluster_centers_[player_cluster]
-        print(f"Bbox {bbox}: Player color={player_color}")
+        # print(f"Bbox {bbox}: Player color={player_color}")
         return player_color
 
 

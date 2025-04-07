@@ -42,8 +42,8 @@ class ViewTransformer():
         for object, object_tracks in tracks.items():
             for frame_num, track in enumerate(object_tracks):
                 for track_id, track_info in track.items():
-                    print(f"Track ID: {track_id}")  # This prints the current track_id
-                    print(f"Track Info Keys: {track_info.keys()}")  # This prints the keys inside the track info
+                    # print(f"Track ID: {track_id}")  # This prints the current track_id
+                    # print(f"Track Info Keys: {track_info.keys()}")  # This prints the keys inside the track info
 
                     position = track_info['bbox']
                     position = np.array(position)
